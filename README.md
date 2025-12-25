@@ -23,6 +23,15 @@
 - **IndexedDB:** Penyimpanan bukti yang aman di sisi klien (browser).
 
 ## 📂 Struktur File
+```
+Kalkulaw
+├── `index.html`: Halaman utama aplikasi.             
+├── `style.css`: File styling untuk tampilan antarmuka.         
+├── `script.js`: Seluruh logika fitur stealth dan emergency.        
+├── `Laporan Manajemen Proyek` : File Project (Dokumen Perencanaan Proyek).                       
+├── `test-video.html`: Alat pengujian untuk memastikan fitur kamera berjalan di browser.                     
+└── README.md
+```         
 - `index.html`: Halaman utama aplikasi.
 - `style.css`: File styling untuk tampilan antarmuka.
 - `script.js`: Seluruh logika fitur stealth dan emergency.

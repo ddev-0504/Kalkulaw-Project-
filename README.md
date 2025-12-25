@@ -50,7 +50,7 @@ Aplikasi ini memerlukan izin **Kamera** dan **Mikrofon** untuk fitur perekaman b
 
 ---
 
-### 🚀 Cara Menjalankan Program
+### Cara Menjalankan Program
 
 Aplikasi ini berbasis web (HTML/JS), jadi **tidak perlu instalasi rumit** atau tambahan aplikasi lain. Cukup ikuti langkah di bawah ini:
 

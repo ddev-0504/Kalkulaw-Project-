@@ -29,7 +29,8 @@ Kalkulaw
 ├── `style.css`: File styling untuk tampilan antarmuka.         
 ├── `script.js`: Seluruh logika fitur stealth dan emergency.        
 ├── `Laporan Manajemen Proyek` : File Project (Dokumen Perencanaan Proyek).                       
-├── `test-video.html`: Alat pengujian untuk memastikan fitur kamera berjalan di browser.                     
+├── `test-video.html`: Alat pengujian untuk memastikan fitur kamera berjalan di browser.
+├── CARA-LIHAT-VIDE0.md                                     
 └── README.md
 ```         
 - `index.html`: Halaman utama aplikasi.
@@ -48,4 +49,35 @@ Kalkulaw
 Aplikasi ini memerlukan izin **Kamera** dan **Mikrofon** untuk fitur perekaman bukti. Pastikan Anda memberikan izin pada browser saat diminta atau baca file `CARA-LIHAT-VIDEO.md` jika mengalami kendala teknis.
 
 ---
+
+### 🚀 Cara Menjalankan Program
+
+Aplikasi ini berbasis web (HTML/JS), jadi **tidak perlu instalasi rumit** atau tambahan aplikasi lain. Cukup ikuti langkah di bawah ini:
+
+#### 1. Melalui Browser (Paling Mudah)
+
+1. Download atau Clone repositori ini ke komputer Anda.
+2. Buka folder `kalkulawfix`.
+3. Klik kanan pada file **`index.html`**, lalu pilih **Open With** > > pilih browser favorit Anda (Google Chrome, Microsoft Edge, atau Firefox).
+4. Aplikasi akan langsung terbuka dan berjalan.
+
+#### 2. Melalui Terminal / Command Line
+
+Jika Anda terbiasa menggunakan terminal, Anda bisa menjalankan perintah berikut:
+
+```bash
+# Clone repository
+git clone https://github.com/ddev-0504/Kalkulaw-Project-.git
+
+# Masuk ke folder
+cd Kalkulaw-Project-
+
+# Buka di browser (Windows)
+start index.html
+
+# Buka di browser (Mac)
+open index.html
+
+```
+
 *Proyek ini dikembangkan untuk tujuan keamanan personal dan bantuan hukum.*

@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KalkuLaw v2.0 - Kalkulator Stealth dengan Fitur Emergency & Evidence Management">
+    <title>KalkuLaw v2.0 - Stealth Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="https://i.ibb.co/8DZy8Gy/kalkulaw-logo.png" type="image/png">
+</head>
+
+<body>
+    <!-- ========== MAIN APP CONTAINER ========== -->
+    <div id="app" class="app dark-mode">
+
+        <!-- ========== HEADER WITH LOGO & MENU ========== -->
+        <header class="app-header">
+            <div class="header-left">
+                <img src="https://i.ibb.co/8DZy8Gy/kalkulaw-logo.png" alt="KalkuLaw Logo" class="app-logo">
+                <div class="time-display" id="timeDisplay">00:00</div>
+            </div>
+            <div class="header-right">
+                <button id="menuButton" class="icon-button" aria-label="Menu" title="Menu">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- ========== CALCULATOR DISPLAY ========== -->
+        <main class="calculator-area">
+            <section class="display-area">
+                <div id="calcDisplay" class="calc-display">0</div>
+                <div id="sequenceDisplay" class="sequence-display"></div>
+            </section>
+
+            <!-- ========== CALCULATOR BUTTONS GRID ========== -->
+            <section class="buttons-grid">
+                <!-- Row 1: AC, %, DEL, ÷ -->
+                <button class="btn btn-circle btn-ac" data-key="AC" aria-label="Clear All">AC</button>
+                <button class="btn btn-circle btn-func" data-key="%" aria-label="Percent">%</button>
+                <button class="btn btn-circle btn-func" data-key="DEL" aria-label="Delete">⌫</button>
+                <button class="btn btn-circle btn-op" data-key="÷" aria-label="Divide">÷</button>
+
+                <!-- Row 2: 7, 8, 9, × -->
+                <button class="btn btn-circle btn-num" data-key="7">7</button>
+                <button class="btn btn-circle btn-num" data-key="8">8</button>
+                <button class="btn btn-circle btn-num" data-key="9">9</button>
+                <button class="btn btn-circle btn-op" data-key="×" aria-label="Multiply">×</button>
+
+                <!-- Row 3: 4, 5, 6, − -->
+                <button class="btn btn-circle btn-num" data-key="4">4</button>
+                <button class="btn btn-circle btn-num" data-key="5">5</button>
+                <button class="btn btn-circle btn-num" data-key="6">6</button>
+                <button class="btn btn-circle btn-op" data-key="−" aria-label="Subtract">−</button>
+
+                <!-- Row 4: 1, 2, 3, + -->
+                <button class="btn btn-circle btn-num" data-key="1">1</button>
+                <button class="btn btn-circle btn-num" data-key="2">2</button>
+                <button class="btn btn-circle btn-num" data-key="3">3</button>
+                <button class="btn btn-circle btn-op" data-key="+" aria-label="Add">+</button>
+
+                <!-- Row 5: 00, 0, ., π -->
+                <button class="btn btn-circle btn-num" data-key="00">00</button>
+                <button class="btn btn-circle btn-num" data-key="0">0</button>
+                <button class="btn btn-circle btn-num" data-key="." aria-label="Decimal">.</button>
+                <button id="piButton" class="btn btn-circle btn-pi" data-key="π" aria-label="Pi">π</button>
+
+                <!-- Row 6: = button (full width, orange) -->
+                <button id="equalButton" class="btn btn-equal" data-key="=" aria-label="Equals">=</button>
+            </section>
+        </main>
+
+        <!-- ========== FOOTER ========== -->
+        <footer class="app-footer">
+            <small>KalkuLaw v2.0 - Enhanced Security Mode</small>
+        </footer>
+    </div>
+
+    <!-- ========== MODAL: MENU MODE (DARK/LIGHT) ========== -->
+    <div id="menuModal" class="modal hidden" role="dialog" aria-modal="true">
+        <div class="modal-overlay" id="menuOverlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Pengaturan Tampilan</h2>
+                <button class="modal-close" id="menuClose" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="menu-options">
+                    <button id="setDarkMode" class="menu-btn">
+                        <span>Mode Gelap</span>
+                    </button>
+                    <button id="setLightMode" class="menu-btn">
+                        <span>Mode Terang</span>
+                    </button>
+                </div>
+                <div class="menu-note">
+                    <p><strong>Catatan Penting:</strong></p>
+                    <p>Fitur darurat (Fake Call dan Emergency) hanya aktif saat <strong>Mode Terang</strong>.</p>
+                    <ul>
+                        <li>Fake Call: π π =</li>
+                        <li>Emergency: 110 =</li>
+                        <li>Dashboard: 505xxx =</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL: CONTACT SELECTION (FAKE CALL) ========== -->
+    <div id="contactModal" class="modal hidden" role="dialog" aria-modal="true">
+        <div class="modal-overlay" id="contactOverlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Pilih Kontak</h2>
+                <button class="modal-close" id="contactClose" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="contact-grid">
+                    <button class="contact-option" data-contact="mother">
+                        <div class="contact-avatar">IBU</div>
+                        <div class="contact-name">Ibu</div>
+                    </button>
+                    <button class="contact-option" data-contact="father">
+                        <div class="contact-avatar">AYH</div>
+                        <div class="contact-name">Ayah</div>
+                    </button>
+                    <button class="contact-option" data-contact="friend">
+                        <div class="contact-avatar">TMN</div>
+                        <div class="contact-name">Teman</div>
+                    </button>
+                    <button class="contact-option" data-contact="sibling">
+                        <div class="contact-avatar">SDR</div>
+                        <div class="contact-name">Saudara</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL: FAKE CALL SCREEN ========== -->
+    <div id="fakeCallModal" class="modal hidden fullscreen" role="dialog" aria-modal="true">
+        <div class="fake-call-screen">
+            <div class="fake-call-header">
+                <div class="call-status">Panggilan Masuk...</div>
+            </div>
+            <div class="fake-call-body">
+                <div class="caller-avatar" id="callerAvatar">Avatar</div>
+                <div class="caller-name" id="callerName">Kontak</div>
+                <div class="caller-number" id="callerNumber">+62 812-xxxx-xxxx</div>
+                <div class="call-timer" id="callTimer">00:00</div>
+                <div class="call-state" id="callState">Berdering...</div>
+            </div>
+            <div class="fake-call-actions">
+                <button id="answerCall" class="call-btn call-answer">
+                    <span class="call-icon"></span>
+                    <span>Angkat</span>
+                </button>
+                <button id="rejectCall" class="call-btn call-reject">
+                    <span class="call-icon"></span>
+                    <span>Tutup</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL: SOS EMERGENCY ========== -->
+    <div id="sosModal" class="modal hidden" role="alertdialog" aria-modal="true">
+        <div class="modal-overlay"></div>
+        <div class="modal-content emergency-modal">
+            <div class="modal-header emergency-header">
+                <h2>Mode Darurat Aktif</h2>
+            </div>
+            <div class="modal-body">
+                <div class="emergency-status">
+                    <div class="emergency-icon">!!!</div>
+                    <p class="emergency-message" id="sosMessage">Mempersiapkan pengiriman darurat...</p>
+                    <div class="countdown-display">
+                        <span class="countdown-label">Mulai dalam:</span>
+                        <span class="countdown-timer" id="sosCountdown">5</span>
+                        <span class="countdown-unit">detik</span>
+                    </div>
+                </div>
+                <div class="emergency-actions">
+                    <button id="sosCancel" class="btn-cancel">Batalkan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL: CAMERA PREVIEW (NEW) ========== -->
+    <div id="cameraModal" class="modal hidden fullscreen" role="dialog" aria-modal="true">
+        <div class="camera-container">
+            <div class="camera-header">
+                <h3>Merekam Bukti Emergency</h3>
+                <button id="cameraClose" class="modal-close">&times;</button>
+            </div>
+            <div class="camera-preview-wrapper">
+                <video id="cameraPreview" autoplay playsinline muted></video>
+                <canvas id="cameraCanvas" style="display:none;"></canvas>
+            </div>
+            <div class="camera-controls">
+                <div class="recording-indicator hidden" id="recordingIndicator">
+                    <span class="recording-dot"></span>
+                    <span>MEREKAM</span>
+                </div>
+                <div class="camera-timer" id="cameraTimer">30</div>
+                <div class="camera-buttons">
+                    <button id="switchCamera" class="camera-btn">
+                        <span>🔄</span>
+                        <span>Switch</span>
+                    </button>
+                    <button id="capturePhoto" class="camera-btn">
+                        <span>📸</span>
+                        <span>Foto</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL: EMERGENCY NOTIFICATION ========== -->
+    <div id="emergencyNotification" class="modal hidden" role="alertdialog" aria-modal="true">
+        <div class="modal-overlay"></div>
+        <div class="modal-content notification-modal">
+            <div class="modal-header success-header">
+                <h2>Darurat Terkirim</h2>
+            </div>
+            <div class="modal-body">
+                <div class="notification-list">
+                    <div class="notification-item">
+                        <span class="notif-icon">POL</span>
+                        <div class="notif-content">
+                            <strong>Ke Polisi Unit PPA</strong>
+                            <span class="notif-status success">TERKIRIM</span>
+                        </div>
+                    </div>
+                    <div class="notification-item">
+                        <span class="notif-icon">KON</span>
+                        <div class="notif-content">
+                            <strong>Ke 3 Kontak Darurat</strong>
+                            <span class="notif-status success">TERKIRIM</span>
+                        </div>
+                    </div>
+                    <div class="notification-item">
+                        <span class="notif-icon">GPS</span>
+                        <div class="notif-content">
+                            <strong>Lokasi GPS</strong>
+                            <span class="notif-detail" id="notifLocation">Jakarta, Indonesia</span>
+                        </div>
+                    </div>
+                    <div class="notification-item">
+                        <span class="notif-icon">VID</span>
+                        <div class="notif-content">
+                            <strong>Video 30 detik</strong>
+                            <span class="notif-status success">DIREKAM & DIKIRIM</span>
+                        </div>
+                    </div>
+                    <div class="notification-item">
+                        <span class="notif-icon">EST</span>
+                        <div class="notif-content">
+                            <strong>Estimasi Bantuan</strong>
+                            <span class="notif-detail">&lt; 30 menit</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification-actions">
+                    <button id="notificationClose" class="btn-primary">Mengerti</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL: PREMIUM UPGRADE (NEW) ========== -->
+    <div id="premiumModal" class="modal hidden" role="dialog" aria-modal="true">
+        <div class="modal-overlay" id="premiumOverlay"></div>
+        <div class="modal-content premium-modal">
+            <div class="modal-header premium-header">
+                <h2>Upgrade ke KALKULAW PRO</h2>
+                <button class="modal-close" id="premiumClose" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="premium-hero">
+                    <img src="https://i.ibb.co/8DZy8Gy/kalkulaw-logo.png" alt="Premium" class="premium-logo">
+                    <p class="premium-tagline">Dapatkan akses penuh ke semua fitur premium</p>
+                </div>
+
+                <div class="premium-features">
+                    <h3>Fitur Premium yang Anda Dapatkan:</h3>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <span class="feature-icon">AI</span>
+                            <div class="feature-text">
+                                <strong>AI Dokumen Pintar</strong>
+                                <p>Generator dokumen legal otomatis</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">Konsul</span>
+                            <div class="feature-text">
+                                <strong>Konsultasi Psikolog</strong>
+                                <p>Akses ke daftar psikolog terverifikasi</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">LBH</span>
+                            <div class="feature-text">
+                                <strong>Pengacara Langsung</strong>
+                                <p>Konsultasi hukum dengan LBH APIK</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">Chat</span>
+                            <div class="feature-text">
+                                <strong>Chatbot 24/7</strong>
+                                <p>Asisten AI untuk pertanyaan darurat</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">Cloud</span>
+                            <div class="feature-text">
+                                <strong>Cloud Backup</strong>
+                                <p>Backup otomatis semua bukti ke cloud</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">Secure</span>
+                            <div class="feature-text">
+                                <strong>Enkripsi Premium</strong>
+                                <p>Keamanan tingkat militer untuk bukti</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="premium-pricing">
+                    <div class="price-card">
+                        <div class="price-tag">
+                            <span class="currency">Rp</span>
+                            <span class="amount">49.999</span>
+                            <span class="period">/bulan</span>
+                        </div>
+                        <p class="price-note">Bisa dibatalkan kapan saja</p>
+                    </div>
+                </div>
+
+                <div class="premium-actions">
+                    <button id="buyPremium" class="btn-buy-premium">
+                        Upgrade Sekarang
+                    </button>
+                    <button id="premiumLater" class="btn-later">Nanti Saja</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== DASHBOARD SECTION ========== -->
+    <div id="dashboardContainer" class="dashboard-container hidden">
+        <div class="dashboard-wrapper">
+
+            <!-- ========== DASHBOARD HEADER ========== -->
+            <header class="dashboard-header">
+                <div class="dashboard-logo">
+                    <img src="https://i.ibb.co/8DZy8Gy/kalkulaw-logo.png" alt="KalkuLaw" class="dash-logo">
+                    <h1>KALKULAW</h1>
+                    <span class="user-badge" id="userBadge">
+                        <span class="badge-icon"></span>
+                        <span class="badge-text" id="userPlan">FREE</span>
+                    </span>
+                </div>
+                <div class="dashboard-user">
+                    <span class="user-name" id="dashUserName">Pengguna</span>
+                    <button class="upgrade-btn" id="upgradeButton" title="Upgrade ke Premium">
+                        <span>Up</span>
+                        <span>Upgrade</span>
+                    </button>
+                    <button class="panic-btn" id="panicButton" title="Panic Emergency">SOS</button>
+                    <button class="dashboard-exit" id="dashboardExit" title="Keluar">X</button>
+                </div>
+            </header>
+
+            <!-- ========== DASHBOARD NAVIGATION ========== -->
+            <nav class="dashboard-nav">
+                <button class="dash-tab active" data-tab="profile">
+                    <span class="tab-icon"></span>
+                    <span>Profil</span>
+                </button>
+                <button class="dash-tab" data-tab="evidence">
+                    <span class="tab-icon"></span>
+                    <span>Bukti</span>
+                </button>
+                <button class="dash-tab" data-tab="ai">
+                    <span class="tab-icon"></span>
+                    <span>AI Dokumen</span>
+                </button>
+                <button class="dash-tab" data-tab="resources">
+                    <span class="tab-icon"></span>
+                    <span>Bantuan</span>
+                </button>
+                <button class="dash-tab" data-tab="history">
+                    <span class="tab-icon"></span>
+                    <span>Riwayat</span>
+                </button>
+                <button class="dash-tab" data-tab="guide">
+                    <span class="tab-icon"></span>
+                    <span>Panduan</span>
+                </button>
+            </nav>
+
+            <!-- ========== DASHBOARD MAIN CONTENT ========== -->
+            <main class="dashboard-main">
+
+                <!-- ========== TAB: PROFILE ========== -->
+                <section id="tabProfile" class="dash-panel active">
+                    <div class="card profile-card">
+                        <h2 class="card-title">Profil Pengguna</h2>
+                        <div class="profile-content">
+                            <div class="profile-photo-section">
+                                <div class="profile-photo" id="profilePhoto">
+                                    <img id="profilePhotoImg" src="" alt="Profile" style="display: none;">
+                                    <div class="profile-placeholder">FOTO</div>
+                                </div>
+                                <label for="photoUpload" class="upload-btn">Upload Foto</label>
+                                <input type="file" id="photoUpload" accept="image/*" style="display: none;">
+                            </div>
+                            <form id="profileForm" class="profile-form">
+                                <div class="form-group">
+                                    <label for="fullName">Nama Lengkap</label>
+                                    <input type="text" id="fullName" class="form-input"
+                                        placeholder="Masukkan nama lengkap">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phoneNumber">Nomor HP</label>
+                                    <input type="tel" id="phoneNumber" class="form-input" placeholder="08xx-xxxx-xxxx">
+                                </div>
+                                <div class="form-divider"></div>
+                                <h3 class="subsection-title">Kontak Darurat</h3>
+                                <div class="emergency-contacts">
+                                    <div class="form-group contact-group">
+                                        <label for="contact1Name">1. Nama Kontak</label>
+                                        <input type="text" id="contact1Name" class="form-input" placeholder="Ibu">
+                                        <input type="tel" id="contact1Phone" class="form-input"
+                                            placeholder="08xx-xxxx-xxxx">
+                                    </div>
+                                    <div class="form-group contact-group">
+                                        <label for="contact2Name">2. Nama Kontak</label>
+                                        <input type="text" id="contact2Name" class="form-input" placeholder="Ayah">
+                                        <input type="tel" id="contact2Phone" class="form-input"
+                                            placeholder="08xx-xxxx-xxxx">
+                                    </div>
+                                    <div class="form-group contact-group">
+                                        <label for="contact3Name">3. Nama Kontak</label>
+                                        <input type="text" id="contact3Name" class="form-input" placeholder="Saudara">
+                                        <input type="tel" id="contact3Phone" class="form-input"
+                                            placeholder="08xx-xxxx-xxxx">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn-save">Simpan Profil</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- ========== PIN SETTING CARD ========== -->
+                    <div class="card pin-card">
+                        <h2 class="card-title">Pengaturan PIN</h2>
+                        <form id="pinForm" class="pin-form">
+                            <div class="form-group">
+                                <label for="pinInput">Atur 3-digit PIN Anda</label>
+                                <input type="text" id="pinInput" class="form-input pin-input" maxlength="3"
+                                    pattern="\d{3}" placeholder="xxx">
+                                <small class="form-hint">PIN akan digunakan: 505 + PIN Anda + =</small>
+                            </div>
+                            <button type="submit" class="btn-save">Simpan PIN</button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- ========== TAB: EVIDENCE ARCHIVE (NEW) ========== -->
+                <section id="tabEvidence" class="dash-panel">
+                    <div class="card evidence-card">
+                        <h2 class="card-title">Arsip Bukti Digital</h2>
+
+                        <!-- Evidence Upload Section -->
+                        <div class="evidence-upload-section">
+                            <h3>Tambah Bukti Baru</h3>
+                            <div class="upload-buttons">
+                                <button class="upload-btn-action" id="takePhoto">
+                                    <span class="btn-icon"></span>
+                                    <span>Ambil Foto</span>
+                                </button>
+                                <button class="upload-btn-action" id="recordVideo">
+                                    <span class="btn-icon"></span>
+                                    <span>Rekam Video</span>
+                                </button>
+                                <button class="upload-btn-action" id="recordAudio">
+                                    <span class="btn-icon"></span>
+                                    <span>Rekam Audio</span>
+                                </button>
+                                <label class="upload-btn-action" for="uploadFile">
+                                    <span class="btn-icon"></span>
+                                    <span>Upload File</span>
+                                </label>
+                                <input type="file" id="uploadFile" accept="image/*,video/*,audio/*,.pdf,.doc,.docx"
+                                    style="display: none;">
+                            </div>
+                        </div>
+
+                        <!-- Evidence Gallery -->
+                        <div class="evidence-gallery">
+                            <h3>Galeri Bukti</h3>
+                            <div class="evidence-filter">
+                                <button class="filter-btn active" data-filter="all">Semua</button>
+                                <button class="filter-btn" data-filter="video">Video</button>
+                                <button class="filter-btn" data-filter="photo">Foto</button>
+                                <button class="filter-btn" data-filter="audio">Audio</button>
+                                <button class="filter-btn" data-filter="document">Dokumen</button>
+                            </div>
+                            <div id="evidenceGrid" class="evidence-grid">
+                                <!-- Evidence items akan di-generate oleh JavaScript -->
+                                <div class="empty-evidence">
+                                    <div class="empty-icon"></div>
+                                    <p>Belum ada bukti tersimpan</p>
+                                    <small>Mulai dengan menambahkan foto, video, atau dokumen</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========== TAB: AI DOCUMENT (NEW - PREMIUM) ========== -->
+                <section id="tabAi" class="dash-panel">
+                    <div class="card ai-card">
+                        <h2 class="card-title">AI Dokumen Pintar</h2>
+
+                        <div class="premium-lock" id="aiLock">
+                            <div class="lock-icon"></div>
+                            <h3>Fitur Premium</h3>
+                            <p>Upgrade ke PRO untuk menggunakan AI Dokumen Generator</p>
+                            <button class="btn-unlock" onclick="document.getElementById('upgradeButton').click()">
+                                Unlock Sekarang
+                            </button>
+                        </div>
+
+                        <div class="ai-content hidden" id="aiContent">
+                            <div class="document-types">
+                                <h3>Pilih Jenis Dokumen:</h3>
+                                <div class="doc-types-grid">
+                                    <button class="doc-type-btn" data-doc="police-report">
+                                        <span></span>
+                                        <span>Laporan Polisi</span>
+                                    </button>
+                                    <button class="doc-type-btn" data-doc="lawsuit">
+                                        <span></span>
+                                        <span>Surat Gugatan</span>
+                                    </button>
+                                    <button class="doc-type-btn" data-doc="power-letter">
+                                        <span></span>
+                                        <span>Surat Kuasa</span>
+                                    </button>
+                                    <button class="doc-type-btn" data-doc="restraining-order">
+                                        <span></span>
+                                        <span>Restraining Order</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="document-form hidden" id="documentForm">
+                                <h3 id="docFormTitle">Form Laporan Polisi</h3>
+                                <form id="aiDocForm">
+                                    <div class="form-group">
+                                        <label>Judul Kasus</label>
+                                        <input type="text" class="form-input" id="docTitle"
+                                            placeholder="Contoh: Kekerasan Dalam Rumah Tangga">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Deskripsi Kejadian</label>
+                                        <textarea class="form-input" id="docDescription" rows="5"
+                                            placeholder="Jelaskan kronologi kejadian secara detail..."></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Waktu Kejadian</label>
+                                        <input type="datetime-local" class="form-input" id="docTime">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Lokasi Kejadian</label>
+                                        <input type="text" class="form-input" id="docLocation"
+                                            placeholder="Alamat lengkap">
+                                    </div>
+                                    <button type="submit" class="btn-generate">
+                                        <span>Generate Dokumen</span>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div class="document-result hidden" id="documentResult">
+                                <h3>Dokumen Hasil</h3>
+                                <div class="doc-preview" id="docPreview"></div>
+                                <div class="doc-actions">
+                                    <button class="doc-action-btn" id="downloadPDF">
+                                        <span>Download PDF</span>
+                                    </button>
+                                    <button class="doc-action-btn" id="downloadDOCX">
+                                        <span>Download DOCX</span>
+                                    </button>
+                                    <button class="doc-action-btn" id="shareDoc">
+                                        <span>Bagikan</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chatbot Section -->
+                    <div class="card chatbot-card">
+                        <h2 class="card-title">Chatbot KDRT Assistant</h2>
+
+                        <div class="premium-lock" id="chatbotLock">
+                            <div class="lock-icon"></div>
+                            <h3>Fitur Premium</h3>
+                            <p>Upgrade ke PRO untuk chatbot 24/7</p>
+                            <button class="btn-unlock" onclick="document.getElementById('upgradeButton').click()">
+                                Unlock Sekarang
+                            </button>
+                        </div>
+
+                        <div class="chatbot-content hidden" id="chatbotContent">
+                            <div class="chat-messages" id="chatMessages">
+                                <div class="chat-message bot">
+                                    <div class="message-avatar">AI</div>
+                                    <div class="message-bubble">
+                                        <p>Halo! Saya asisten virtual KalkuLaw. Ada yang bisa saya bantu?</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-input-area">
+                                <input type="text" id="chatInput" class="chat-input"
+                                    placeholder="Ketik pertanyaan Anda...">
+                                <button id="chatSend" class="chat-send-btn">
+                                    <span>Kirim</span>
+                                </button>
+                            </div>
+                            <div class="chat-suggestions">
+                                <button class="suggestion-btn" data-query="Bagaimana cara membuat laporan polisi?">Cara
+                                    laporan polisi</button>
+                                <button class="suggestion-btn"
+                                    data-query="Dimana saya bisa konsultasi psikolog?">Konsultasi psikolog</button>
+                                <button class="suggestion-btn" data-query="Apa saja hak korban KDRT?">Hak korban
+                                    KDRT</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========== TAB: RESOURCES (NEW) ========== -->
+                <section id="tabResources" class="dash-panel">
+                    <div class="card resources-card">
+                        <h2 class="card-title">Sumber Bantuan</h2>
+
+                        <!-- Emergency Numbers -->
+                        <div class="resource-section">
+                            <h3>Nomor Darurat</h3>
+                            <div class="emergency-numbers">
+                                <a href="tel:110" class="emergency-number">
+                                    <span class="em-icon"></span>
+                                    <div class="em-info">
+                                        <strong>Polisi</strong>
+                                        <span>110</span>
+                                    </div>
+                                </a>
+                                <a href="tel:119" class="emergency-number">
+                                    <span class="em-icon"></span>
+                                    <div class="em-info">
+                                        <strong>Ambulans</strong>
+                                        <span>119</span>
+                                    </div>
+                                </a>
+                                <a href="tel:0213903963" class="emergency-number">
+                                    <span class="em-icon"></span>
+                                    <div class="em-info">
+                                        <strong>Komnas Perempuan</strong>
+                                        <span>021-3903963</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Psychologists List -->
+                        <div class="resource-section">
+                            <h3>Daftar Psikolog</h3>
+                            <div class="premium-lock small" id="psychologistLock">
+                                <p>Fitur Premium - Upgrade untuk akses</p>
+                            </div>
+                            <div class="psychologist-list hidden" id="psychologistList">
+                                <div class="resource-item">
+                                    <div class="resource-header">
+                                        <h4>Dr. Sarah Melinda, M.Psi</h4>
+                                        <span class="resource-rating">4.9</span>
+                                    </div>
+                                    <p class="resource-detail">Spesialis Trauma & KDRT</p>
+                                    <p class="resource-location">Jakarta Selatan</p>
+                                    <button class="resource-btn">Booking Konsultasi</button>
+                                </div>
+                                <div class="resource-item">
+                                    <div class="resource-header">
+                                        <h4>Dra. Rina Wati, Psi</h4>
+                                        <span class="resource-rating">4.8</span>
+                                    </div>
+                                    <p class="resource-detail">Konseling Keluarga & KDRT</p>
+                                    <p class="resource-location">Jakarta Pusat</p>
+                                    <button class="resource-btn">Booking Konsultasi</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lawyers List -->
+                        <div class="resource-section">
+                            <h3>Daftar Pengacara</h3>
+                            <div class="premium-lock small" id="lawyerLock">
+                                <p>Fitur Premium - Upgrade untuk akses</p>
+                            </div>
+                            <div class="lawyer-list hidden" id="lawyerList">
+                                <div class="resource-item">
+                                    <div class="resource-header">
+                                        <h4>LBH APIK Jakarta</h4>
+                                        <span class="resource-badge">Gratis</span>
+                                    </div>
+                                    <p class="resource-detail">Bantuan Hukum untuk Perempuan</p>
+                                    <p class="resource-location">Jakarta</p>
+                                    <button class="resource-btn">Konsultasi Gratis</button>
+                                </div>
+                                <div class="resource-item">
+                                    <div class="resource-header">
+                                        <h4>Hj. Dewi Anggraini, S.H., M.H.</h4>
+                                        <span class="resource-rating">4.9</span>
+                                    </div>
+                                    <p class="resource-detail">Pengacara Spesialis KDRT</p>
+                                    <p class="resource-location">Jakarta Selatan</p>
+                                    <button class="resource-btn">Konsultasi Langsung</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Support Groups -->
+                        <div class="resource-section">
+                            <h3>Komunitas Dukungan</h3>
+                            <div class="support-groups">
+                                <div class="group-item">
+                                    <h4>Rifka Annisa Women's Crisis Center</h4>
+                                    <p>Pendampingan korban kekerasan</p>
+                                    <a href="tel:02747453399" class="group-contact">024-7745 3399</a>
+                                </div>
+                                <div class="group-item">
+                                    <h4>Mitra Perempuan Women's Crisis Center</h4>
+                                    <p>Konseling & bantuan hukum</p>
+                                    <a href="tel:02123180158" class="group-contact">021-2318 0158</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========== TAB: HISTORY ========== -->
+                <section id="tabHistory" class="dash-panel">
+                    <div class="card history-card">
+                        <h2 class="card-title">Riwayat Aktivasi Emergency</h2>
+                        <div class="history-content">
+                            <div id="historyList" class="history-list">
+                                <div class="empty-state">
+                                    <div class="empty-icon"></div>
+                                    <p>Belum ada riwayat emergency</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========== TAB: GUIDE ========== -->
+                <section id="tabGuide" class="dash-panel">
+                    <div class="card guide-card">
+                        <h2 class="card-title">Panduan Penggunaan</h2>
+                        <div class="guide-content">
+                            <div class="guide-section">
+                                <h3>Fitur Emergency</h3>
+                                <ol class="guide-list">
+                                    <li>
+                                        <strong>Emergency 110:</strong>
+                                        <p>Ketik <code>1 1 0 =</code> untuk memanggil polisi darurat. Video 30 detik
+                                            akan otomatis direkam dan lokasi GPS dikirim.</p>
+                                    </li>
+                                    <li>
+                                        <strong>Fake Call:</strong>
+                                        <p>Ketik <code>π π =</code> untuk membuka fake call. Pilih kontak
+                                            (Ibu/Ayah/Teman/Saudara) dan sistem akan menampilkan layar panggilan palsu.
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <strong>Akses Dashboard:</strong>
+                                        <p>Ketik <code>5 0 5 [PIN Anda] =</code> untuk membuka dashboard utama. Contoh:
+                                            jika PIN Anda 123, ketik <code>505123=</code></p>
+                                    </li>
+                                    <li>
+                                        <strong>Mode Terang/Gelap:</strong>
+                                        <p>Klik tombol <strong>⋮</strong> di pojok kanan atas untuk mengubah mode. Fitur
+                                            emergency hanya aktif di Mode Terang.</p>
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <div class="guide-section">
+                                <h3>Manajemen Bukti</h3>
+                                <ul class="guide-tips">
+                                    <li>Gunakan tab <strong>Bukti</strong> untuk mengumpulkan foto, video, dan dokumen
+                                    </li>
+                                    <li>Semua bukti tersimpan dengan enkripsi AES-256</li>
+                                    <li>Video emergency otomatis masuk ke arsip bukti</li>
+                                    <li>Anda bisa menambah bukti manual kapan saja</li>
+                                </ul>
+                            </div>
+
+                            <div class="guide-section">
+                                <h3>Fitur Premium</h3>
+                                <ul class="guide-tips">
+                                    <li><strong>AI Dokumen:</strong> Generator laporan polisi & dokumen legal otomatis
+                                    </li>
+                                    <li><strong>Chatbot 24/7:</strong> Asisten virtual untuk pertanyaan darurat</li>
+                                    <li><strong>Psikolog & Pengacara:</strong> Akses ke daftar profesional terverifikasi
+                                    </li>
+                                    <li><strong>Cloud Backup:</strong> Backup otomatis semua bukti ke cloud aman</li>
+                                </ul>
+                            </div>
+
+                            <div class="guide-section">
+                                <h3>Tips Keamanan</h3>
+                                <ul class="guide-tips">
+                                    <li>Selalu gunakan Mode Gelap saat tidak dalam keadaan darurat</li>
+                                    <li>Simpan 3 kontak darurat yang dapat dihubungi 24/7</li>
+                                    <li>Jangan bagikan PIN Anda kepada orang lain</li>
+                                    <li>Test fake call terlebih dahulu agar familiar</li>
+                                    <li>Backup bukti secara berkala</li>
+                                </ul>
+                            </div>
+
+                            <div class="guide-section">
+                                <h3>Catatan Penting</h3>
+                                <div class="guide-note">
+                                    <p>KalkuLaw adalah aplikasi <strong>stealth</strong> yang dirancang untuk korban
+                                        KDRT dan trafficking. Gunakan dengan bijak dan hanya saat benar-benar
+                                        diperlukan.</p>
+                                    <p>Untuk bantuan lebih lanjut, hubungi:</p>
+                                    <ul>
+                                        <li>Komnas Perempuan: 021-3903963</li>
+                                        <li>LBH APIK: Konsultasi gratis</li>
+                                        <li>Polisi: 110 (darurat)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- ========== MODAL: EVIDENCE VIEWER ========== -->
+    <div id="evidenceViewer" class="modal hidden fullscreen" role="dialog" aria-modal="true">
+        <div class="viewer-container">
+            <div class="viewer-header">
+                <h3 id="viewerTitle">Bukti</h3>
+                <button id="viewerClose" class="modal-close">&times;</button>
+            </div>
+            <div class="viewer-content" id="viewerContent">
+                <!-- Content will be injected by JS -->
+            </div>
+            <div class="viewer-meta" id="viewerMeta">
+                <!-- Metadata will be injected by JS -->
+            </div>
+            <div class="viewer-actions">
+                <button class="viewer-btn" id="viewerDownload">
+                    <span>📥</span>
+                    <span>Download</span>
+                </button>
+                <button class="viewer-btn" id="viewerShare">
+                    <span>✉️</span>
+                    <span>Bagikan</span>
+                </button>
+                <button class="viewer-btn delete" id="viewerDelete">
+                    <span>🗑️</span>
+                    <span>Hapus</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== LOADING OVERLAY ========== -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Memuat...</p>
+    </div>
+
+    <!-- ========== TOAST NOTIFICATION ========== -->
+    <div id="toast" class="toast hidden">
+        <span class="toast-icon"></span>
+        <span class="toast-message"></span>
+    </div>
+
+    <!-- ========== ADMIN PANEL (HIDDEN BY DEFAULT) ========== -->
+    <div id="adminPanel" class="admin-panel hidden">
+        <div class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="https://i.ibb.co/8DZy8Gy/kalkulaw-logo.png" alt="Admin">
+                <h2>ADMIN PANEL</h2>
+            </div>
+            <nav class="admin-nav">
+                <button class="admin-nav-btn active" data-admin-tab="dashboard">
+                    <span></span>
+                    <span>Dashboard</span>
+                </button>
+                <button class="admin-nav-btn" data-admin-tab="users">
+                    <span></span>
+                    <span>Users</span>
+                </button>
+                <button class="admin-nav-btn" data-admin-tab="evidence">
+                    <span></span>
+                    <span>Evidence</span>
+                </button>
+                <button class="admin-nav-btn" data-admin-tab="emergencies">
+                    <span></span>
+                    <span>Emergencies</span>
+                </button>
+                <button class="admin-nav-btn" data-admin-tab="settings">
+                    <span></span>
+                    <span>Settings</span>
+                </button>
+            </nav>
+            <div class="admin-logout">
+                <button id="adminLogout" class="logout-btn">
+                    <span></span>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-content">
+            <div class="admin-header">
+                <h1>Admin Dashboard</h1>
+                <div class="admin-user-info">
+                    <span id="adminUsername">Admin</span>
+                </div>
+            </div>
+
+            <!-- Admin Dashboard Tab -->
+            <div id="adminDashboard" class="admin-tab active">
+                <div class="admin-stats">
+                    <div class="stat-box">
+                        <div class="stat-icon"></div>
+                        <div class="stat-info">
+                            <h3 id="statTotalUsers">0</h3>
+                            <p>Total Users</p>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon"></div>
+                        <div class="stat-info">
+                            <h3 id="statEmergencies">0</h3>
+                            <p>Emergency Logs</p>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon"></div>
+                        <div class="stat-info">
+                            <h3 id="statEvidence">0</h3>
+                            <p>Evidence Files</p>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon"></div>
+                        <div class="stat-info">
+                            <h3 id="statPremium">0</h3>
+                            <p>Premium Users</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-chart-section">
+                    <h2>Emergency Activity (Last 7 Days)</h2>
+                    <canvas id="emergencyChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Admin Users Tab -->
+            <div id="adminUsers" class="admin-tab">
+                <div class="admin-search">
+                    <input type="text" id="adminSearchUser" class="admin-search-input" placeholder="Cari user...">
+                </div>
+                <div class="admin-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Last Active</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminUsersTable">
+                            <!-- Filled by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Admin Evidence Tab -->
+            <div id="adminEvidence" class="admin-tab">
+                <div class="evidence-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="video">Videos</button>
+                    <button class="filter-btn" data-filter="photo">Photos</button>
+                    <button class="filter-btn" data-filter="audio">Audio</button>
+                    <button class="filter-btn" data-filter="document">Documents</button>
+                </div>
+                <div id="adminEvidenceGrid" class="admin-evidence-grid">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+
+            <!-- Admin Emergencies Tab -->
+            <div id="adminEmergencies" class="admin-tab">
+                <div class="emergency-live-monitor">
+                    <h2>Live Emergency Monitor</h2>
+                    <div id="emergencyMap" class="emergency-map">
+                        <!-- Map placeholder -->
+                        <p>Real-time emergency map will appear here</p>
+                    </div>
+                </div>
+                <div class="emergency-logs">
+                    <h2>Emergency Logs</h2>
+                    <div id="adminEmergencyList" class="admin-emergency-list">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Settings Tab -->
+            <div id="adminSettings" class="admin-tab">
+                <h2>System Settings</h2>
+                <div class="settings-form">
+                    <div class="setting-item">
+                        <label>Emergency Response Time (minutes)</label>
+                        <input type="number" id="responseTime" value="30">
+                    </div>
+                    <div class="setting-item">
+                        <label>Auto Backup</label>
+                        <input type="checkbox" id="autoBackup" checked>
+                    </div>
+                    <div class="setting-item">
+                        <label>Evidence Retention (days)</label>
+                        <input type="number" id="retentionDays" value="90">
+                    </div>
+                    <button class="btn-save-settings">Save Settings</button>
+                </div>
+
+                <div class="admin-actions">
+                    <h3>Admin Actions</h3>
+                    <button class="admin-action-btn">Export All Data</button>
+                    <button class="admin-action-btn">Backup Database</button>
+                    <button class="admin-action-btn danger">Clear All Logs</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ADMIN LOGIN MODAL ========== -->
+    <div id="adminLoginModal" class="modal hidden" role="dialog" aria-modal="true">
+        <div class="modal-overlay"></div>
+        <div class="modal-content admin-login-modal">
+            <div class="modal-header">
+                <h2>Admin Login</h2>
+                <button class="modal-close" id="adminLoginClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="adminLoginForm" class="admin-login-form">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="adminUser" class="form-input" placeholder="admin_kalkulaw">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="adminPass" class="form-input" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn-admin-login">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL: EVIDENCE VIEWER ========== -->
+    <div id="evidenceViewer" class="modal hidden" role="dialog" aria-modal="true">
+        <div class="modal-overlay"></div>
+        <div class="modal-content evidence-viewer-modal">
+            <div class="modal-header">
+                <h2 id="viewerTitle">Bukti Video</h2>
+                <button class="modal-close" id="viewerClose" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="viewerContent" class="viewer-content">
+                    <!-- Video/Photo/Audio will be inserted here -->
+                </div>
+                <div id="viewerMeta" class="viewer-meta">
+                    <!-- Metadata will be inserted here -->
+                </div>
+                <div class="viewer-actions">
+                    <button id="viewerDownload" class="btn-viewer">Download</button>
+                    <button id="viewerShare" class="btn-viewer">Share</button>
+                    <button id="viewerDelete" class="btn-viewer btn-danger">Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== JAVASCRIPT ========== -->
+    <script src="script.js?v=2.5"></script>
+
+    <!-- Secret Admin Access (5 clicks on logo) -->
+    <script>
+        let logoClickCount = 0;
+        document.addEventListener('DOMContentLoaded', () => {
+            const logo = document.querySelector('.app-logo');
+            if (logo) {
+                logo.addEventListener('click', () => {
+                    logoClickCount++;
+                    if (logoClickCount === 5) {
+                        document.getElementById('adminLoginModal').classList.remove('hidden');
+                        logoClickCount = 0;
+                    }
+                    setTimeout(() => { logoClickCount = 0; }, 3000);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
